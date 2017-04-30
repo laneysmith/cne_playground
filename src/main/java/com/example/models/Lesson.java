@@ -1,9 +1,11 @@
 package com.example.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "lessons")
@@ -11,35 +13,35 @@ public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String title;
+    @JsonView(Views.ListView.class)
+    private final Long id;
 
+    @JsonView(Views.ListView.class)
+    private final String title;
 
     @Column(columnDefinition = "date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date deliveredOn;
+    @JsonSerialize(using=CustomDateSerializer.class)
+    @JsonView(Views.SingleLessonView.class)
+    private final DateTime deliveredOn;
+
+    public Lesson(
+            @JsonProperty("id") Long id,
+            @JsonProperty("title") String title,
+            @JsonProperty("deliveredOn") DateTime deliveredOn) {
+        this.id = id;
+        this.title = title;
+        this.deliveredOn = deliveredOn;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Date getDeliveredOn() {
+    public DateTime getDeliveredOn() {
         return deliveredOn;
-    }
-
-    public void setDeliveredOn(Date deliveredOn) {
-        this.deliveredOn = deliveredOn;
     }
 }
