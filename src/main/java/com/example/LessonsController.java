@@ -19,14 +19,14 @@ public class LessonsController {
 
     @GetMapping("")
     @JsonView(Views.ListView.class)
-    public Iterable<Lesson> all() {
-        return this.repository.findAll();
+    public ResponseEntity<Iterable<Lesson>> all() {
+        return new ResponseEntity<>(this.repository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @JsonView(Views.SingleLessonView.class)
-    public Lesson lesson(@PathVariable long id) {
-        return this.repository.findOne(id);
+    public ResponseEntity<Lesson> lesson(@PathVariable long id) {
+        return new ResponseEntity<>(this.repository.findOne(id), HttpStatus.OK);
     }
 
     @PostMapping("")
